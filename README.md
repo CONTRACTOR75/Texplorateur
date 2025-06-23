@@ -18,5 +18,3 @@ Installation :
 Désinstallation :
 - Rendez-vous dans "Applications et fonctionnalités"
 - Recherchez "Texplorateur" puis cliquez sur "Désinstaller"
-
-Contact : [ton.email@exemple.com]
