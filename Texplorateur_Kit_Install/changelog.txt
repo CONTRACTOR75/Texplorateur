@@ -1,0 +1,8 @@
+Texplorateur - Historique des versions
+
+Version 1.0 - 2025-05-07
+- Première version publique
+- Recherche par mot-clé sur tous les fichiers d’un type donné
+- Interface animée pendant la recherche
+- Ouverture directe de l’emplacement des fichiers trouvés
+
