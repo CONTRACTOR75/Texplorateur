@@ -11,7 +11,10 @@ Fonctionnalités :
 - Interface claire
 
 Installation :
-1. Lancez `TexplorateurSetup.exe`
+1. Lancez `TexplorateurSetup.exe` se trouve dans 
+''' bash 
+dist/Texteplorateur_V2.exe
+'''
 2. Suivez les étapes d’installation
 3. Une fois installé, ouvrez le logiciel via le raccourci sur le bureau ou dans le menu démarrer
 
