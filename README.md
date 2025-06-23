@@ -1,59 +1,65 @@
-🗂️ Texplorateur – Recherche intelligente de fichiers
+# 🗂️ Texplorateur – Recherche intelligente de fichiers
+
 Texplorateur est une application Windows qui permet d'effectuer une recherche rapide et intuitive dans tous les fichiers d'une extension donnée présents sur votre ordinateur, à la recherche d'une phrase spécifique.
 
-✨ Fonctionnalités principales
-  -🔍 Recherche de phrases dans des fichiers .txt, .docx, .pdf, .xlsx, etc.
+## ✨ Fonctionnalités principales
+  
+  + 🔍 Recherche de phrases dans des fichiers .txt, .docx, .pdf, .xlsx, etc.
 
-  -📁 Affichage des chemins complets vers les fichiers trouvés (copiables)
+  + 📁 Affichage des chemins complets vers les fichiers trouvés (copiables)
 
-  -🖱️ Bouton intégré pour ouvrir directement le fichier dans l'explorateur Windows
+  + 🖱️ Bouton intégré pour ouvrir directement le fichier dans l'explorateur Windows
 
-  -🧸 Animation mignonne pendant la recherche (plus de fenêtre figée !)
+  + 🧸 Animation mignonne pendant la recherche (plus de fenêtre figée !)
 
-  -💡 Interface utilisateur simple, claire et accessible
+  + 💡 Interface utilisateur simple, claire et accessible
 
-🚀 Comment utiliser Texplorateur
-  -Lancez l’application Texplorateur.exe
+## 🚀 Comment utiliser Texplorateur
 
-  -Entrez la phrase à rechercher
+  1. Lancez l’application Texplorateur.exe
 
-  -Sélectionnez l’extension de fichier cible (ex : .txt, .pdf, .docx, etc.)
+  2. Entrez la phrase à rechercher
 
-  -Cliquez sur Rechercher
+  3. Sélectionnez l’extension de fichier cible (ex : .txt, .pdf, .docx )
 
-  Résultats affichés avec :
+  4. Cliquez sur Rechercher
 
-  -Boutons pour ouvrir l’emplacement du fichier
+  ### Résultats affichés avec :
 
-💼 Cas d’usage typiques
-  -📚 Retrouver des documents contenant un passage spécifique
+  - Boutons pour ouvrir l’emplacement du fichier
 
-  -🔎 Vérifier la présence de données sensibles dans des fichiers
+## 💼 Cas d’usage typiques
 
-  -🧑‍💼 Utiliser en entreprise pour parcourir des archives textuelles ou des rapports
+  - 📚 Retrouver des documents contenant un passage spécifique
 
-📂 Installation
+  - 🔎 Vérifier la présence de données sensibles dans des fichiers
+
+  - 🧑‍💼 Utiliser en entreprise pour parcourir des archives textuelles ou des rapports
+
+## 📂 Installation
+
 Si vous avez téléchargé le setup, suivez les étapes :
 
-  -Double-cliquez sur Install_Texplorateur.exe
+  - Double-cliquez sur Install_Texplorateur.exe
 
-  -Laissez-vous guider par l’installateur
+  - Laissez-vous guider par l’installateur
 
-  -Une fois installé, lancez Texplorateur depuis le menu Démarrer ou le raccourci sur le bureau
+  - Une fois installé, lancez Texplorateur depuis le menu Démarrer ou le raccourci sur le bureau
 
-📋 Configuration minimale requise
-  -Windows 10 ou 11
+## 📋 Configuration minimale requise
 
-  -Python non requis (fonctionne même sans Python installé)
+  - Windows 10 ou 11
 
-  -RAM : 2 Go minimum
+  - Python non requis (fonctionne même sans Python installé)
 
-🛠️ Dépendances intégrées
-Ce programme a été compilé avec PyInstaller pour inclure :
+  - RAM : 2 Go minimum
 
-  -tkinter (interface graphique)
+## 🛠️ Dépendances intégrées
 
-  -python-docx, PyPDF2, openpyxl (pour lire les différents types de fichiers)
+Ce programme a été compilé avec Inno Setup Compler pour inclure :
 
-👨‍💻 Auteur
-Développé par CONTRACTOR75
+  - tkinter (interface graphique)
+
+  - python-docx, PyPDF2, openpyxl (pour lire les différents types de fichiers)
+
+### 👨‍💻 Auteur : Développé par CONTRACTOR75
