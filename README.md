@@ -1,23 +1,59 @@
-Texplorateur - Outil de recherche de phrase dans vos fichiers
+🗂️ Texplorateur – Recherche intelligente de fichiers
+Texplorateur est une application Windows qui permet d'effectuer une recherche rapide et intuitive dans tous les fichiers d'une extension donnée présents sur votre ordinateur, à la recherche d'une phrase spécifique.
 
-Description :
-Texplorateur est un outil qui vous permet de rechercher une phrase ou un mot-clé dans tous les fichiers d’un certain type (PDF, DOCX, TXT, etc.) sur votre ordinateur. Le tout avec une interface simple et efficace.
+✨ Fonctionnalités principales
+🔍 Recherche de phrases dans des fichiers .txt, .docx, .pdf, .xlsx, etc.
 
-Fonctionnalités :
-- Recherche rapide par mot-clé
-- Support de plusieurs extensions (.txt, .pdf, .docx, etc.)
-- Affichage des résultats avec lien vers l’explorateur de fichiers
-- Animation de recherche
-- Interface claire
+📁 Affichage des chemins complets vers les fichiers trouvés (copiables)
 
-Installation :
-1. Lancez `TexplorateurSetup.exe` se trouve dans 
-''' bash 
-dist/Texteplorateur_V2.exe
-'''
-2. Suivez les étapes d’installation
-3. Une fois installé, ouvrez le logiciel via le raccourci sur le bureau ou dans le menu démarrer
+🖱️ Bouton intégré pour ouvrir directement le fichier dans l'explorateur Windows
 
-Désinstallation :
-- Rendez-vous dans "Applications et fonctionnalités"
-- Recherchez "Texplorateur" puis cliquez sur "Désinstaller"
+🧸 Animation mignonne pendant la recherche (plus de fenêtre figée !)
+
+💡 Interface utilisateur simple, claire et accessible
+
+🚀 Comment utiliser Texplorateur
+Lancez l’application Texplorateur.exe
+
+Entrez la phrase à rechercher
+
+Sélectionnez l’extension de fichier cible (ex : .txt, .pdf, .docx, etc.)
+
+Cliquez sur Rechercher
+
+Résultats affichés avec :
+
+Boutons pour ouvrir l’emplacement du fichier
+
+💼 Cas d’usage typiques
+📚 Retrouver des documents contenant un passage spécifique
+
+🔎 Vérifier la présence de données sensibles dans des fichiers
+
+🧑‍💼 Utiliser en entreprise pour parcourir des archives textuelles ou des rapports
+
+📂 Installation
+Si vous avez téléchargé le setup, suivez les étapes :
+
+Double-cliquez sur Install_Texplorateur.exe
+
+Laissez-vous guider par l’installateur
+
+Une fois installé, lancez Texplorateur depuis le menu Démarrer ou le raccourci sur le bureau
+
+📋 Configuration minimale requise
+Windows 10 ou 11
+
+Python non requis (fonctionne même sans Python installé)
+
+RAM : 2 Go minimum
+
+🛠️ Dépendances intégrées
+Ce programme a été compilé avec PyInstaller pour inclure :
+
+tkinter (interface graphique)
+
+python-docx, PyPDF2, openpyxl (pour lire les différents types de fichiers)
+
+👨‍💻 Auteur
+Développé par CONTRACTOR75
