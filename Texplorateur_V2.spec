@@ -1,12 +1,13 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+from PyInstaller.utils.hooks import collect_data_files
 
 a = Analysis(
     ['Texplorateur_V2.py'],
     pathex=[],
     binaries=[],
-    datas=[],
-    hiddenimports=[],
+    datas=collect_data_files('customtkinter'),
+    hiddenimports=['openpyxl', 'customtkinter'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
