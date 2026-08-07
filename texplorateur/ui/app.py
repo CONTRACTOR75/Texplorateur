@@ -39,6 +39,12 @@ class TexplorateurApp:
         self.navigate("accueil")
 
     def _construire_layout(self):
+        # Sidebar et contenu restent gridés en permanence : basculer entre
+        # écrans "hub" et écrans plein cadre se fait uniquement en changeant
+        # l'ordre d'empilement (tkraise/lower), jamais en re-gridant les
+        # widgets. Un grid()/grid_remove() répété déclenche un recalcul de
+        # géométrie sur toute la fenêtre — visible comme un flash/décalage
+        # du contenu à chaque navigation.
         self.sidebar = Sidebar(
             self.root, on_navigate=self.navigate, on_nouvelle_recherche=lambda: self.navigate("formulaire"))
         self.sidebar.grid(row=0, column=0, sticky="ns")
@@ -48,14 +54,21 @@ class TexplorateurApp:
         self.content.grid_columnconfigure(0, weight=1)
         self.content.grid_rowconfigure(0, weight=1)
 
+        # Conteneur plein cadre, superposé à la sidebar + au contenu, pour
+        # les écrans focalisés (formulaire, recherche en cours, résultats).
+        self.focus_container = ctk.CTkFrame(self.root, fg_color="transparent", corner_radius=0)
+        self.focus_container.grid(row=0, column=0, columnspan=2, sticky="nsew")
+        self.focus_container.grid_columnconfigure(0, weight=1)
+        self.focus_container.grid_rowconfigure(0, weight=1)
+
         self.screens = {
             "accueil": AccueilScreen(self.content, self),
             "historique": HistoriqueScreen(self.content, self),
             "parametres": ParametresScreen(self.content, self),
             "a_propos": AProposScreen(self.content, self),
-            "formulaire": FormulaireScreen(self.content, self),
-            "recherche_en_cours": RechercheEnCoursScreen(self.content, self),
-            "resultats": ResultatsScreen(self.content, self),
+            "formulaire": FormulaireScreen(self.focus_container, self),
+            "recherche_en_cours": RechercheEnCoursScreen(self.focus_container, self),
+            "resultats": ResultatsScreen(self.focus_container, self),
         }
         for screen in self.screens.values():
             screen.grid(row=0, column=0, sticky="nsew")
@@ -64,14 +77,16 @@ class TexplorateurApp:
         if self._ecran_actuel is not None:
             self.screens[self._ecran_actuel].on_hide()
 
-        if nom in ECRANS_AVEC_SIDEBAR:
-            self.sidebar.grid(row=0, column=0, sticky="ns")
-            self.sidebar.definir_actif(nom)
-        else:
-            self.sidebar.grid_remove()
-
         ecran = self.screens[nom]
         ecran.tkraise()
+
+        if nom in ECRANS_AVEC_SIDEBAR:
+            self.sidebar.definir_actif(nom)
+            self.sidebar.tkraise()
+            self.content.tkraise()
+        else:
+            self.focus_container.tkraise()
+
         ecran.on_show(**kwargs)
         self._ecran_actuel = nom
 
