@@ -1,0 +1,78 @@
+{
+  "commun": {
+    "nouvelle_recherche": "+ New search",
+    "accueil": "Home",
+    "historique": "History",
+    "parametres": "Settings",
+    "a_propos": "About",
+    "ouvrir": "📂 Open",
+    "annuler": "Cancel",
+    "relancer": "↻ Rerun",
+    "resultats": "📄 Results",
+    "rechercher": "Search",
+    "parcourir": "Browse…",
+    "retour_accueil": "← Home"
+  },
+  "sidebar": {
+    "titre": "🗂️ Texplorateur",
+    "sous_titre": "Smart file search"
+  },
+  "accueil": {
+    "sous_titre": "Find a phrase across your files, in an instant.",
+    "raccourci_relancer": "↻ Rerun: {libelle}",
+    "stats_recherches": "{n} search(es) in history",
+    "stats_vide": "No searches yet"
+  },
+  "formulaire": {
+    "titre": "New search",
+    "label_phrase": "Phrase to search for:",
+    "placeholder_phrase": "E.g.: annual report 2025",
+    "label_dossier": "Search folder:",
+    "dossier_non_selectionne": "No folder selected",
+    "label_extensions": "File types:",
+    "erreur_champs_titre": "Required fields",
+    "erreur_champs_message": "Please enter a phrase, select a folder and at least one file type."
+  },
+  "recherche_en_cours": {
+    "messages": [
+      "Searching through files…",
+      "Scanning folders…",
+      "Analyzing content…",
+      "Almost done…",
+      "Just a moment…"
+    ],
+    "parcours_dossiers": "Scanning folders…",
+    "compteur": "{n} file(s) analyzed — {dossier}",
+    "annulation": "Cancelling…"
+  },
+  "resultats": {
+    "titre": "Search results",
+    "aucun_resultat": "No results: the phrase doesn't appear in any of the {total} file(s) analyzed.",
+    "trouves": "{n} file(s) found out of {total} scanned"
+  },
+  "historique": {
+    "titre": "Search history",
+    "vide": "No searches yet."
+  },
+  "parametres": {
+    "titre": "Settings",
+    "sous_titre": "Configure and manage your default options here",
+    "section_apparence": "Appearance",
+    "theme_label": "Interface theme",
+    "section_recherche": "Search",
+    "extensions_label": "File types pre-checked when opening the form",
+    "section_historique": "History",
+    "historique_compte": "{n} search(es) saved",
+    "historique_vide": "No searches saved",
+    "effacer_historique": "Clear history",
+    "confirmer_titre": "Clear history",
+    "confirmer_message": "Permanently delete the entire search history?",
+    "section_langue": "Language",
+    "langue_label": "Interface language"
+  },
+  "a_propos": {
+    "version": "Version {version}",
+    "description": "Smart phrase search across your files\n.txt, .pdf, .docx and .xlsx.",
+    "auteur": "Developed by CONTRACTOR75"
+  }
+}

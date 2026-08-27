@@ -2,6 +2,7 @@ import customtkinter as ctk
 
 from ..config import AppConfig
 from ..historique import sauvegarder_historique
+from ..i18n import Traducteur
 from ..recherche import MoteurRecherche
 from .screens.a_propos import AProposScreen
 from .screens.accueil import AccueilScreen
@@ -20,6 +21,11 @@ class TexplorateurApp:
         self.config = AppConfig()
         ctk.set_appearance_mode(self.config.theme)
         ctk.set_default_color_theme("blue")
+
+        # Service de traduction, prêt à être consommé par les écrans
+        # (app.i18n.t("cle")) — aucun écran n'y est encore câblé, seule
+        # l'infrastructure est en place pour l'instant.
+        self.i18n = Traducteur(self.config.langue)
 
         self.root = ctk.CTk()
         self.root.title("Texplorateur")
