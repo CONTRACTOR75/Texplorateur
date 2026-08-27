@@ -3,7 +3,7 @@ from tkinter import messagebox
 import customtkinter as ctk
 
 from ...historique import charger_historique, supprimer_historique
-from ..theme import ACCENT_ERREUR, font_normal, font_sous_titre, font_titre
+from ..theme import ACCENT_ERREUR, ACCENT_GRIS, font_normal, font_sous_titre, font_titre
 from .base import Screen
 
 
@@ -19,7 +19,7 @@ class HistoriqueScreen(Screen):
         self.corps.grid_rowconfigure(0, weight=1)
 
         self.label_vide = ctk.CTkLabel(
-            self.corps, text=self.t("historique.vide"), font=font_sous_titre(12), text_color="gray")
+            self.corps, text=self.t("historique.vide"), font=font_sous_titre(12), text_color=ACCENT_GRIS)
         self.label_vide.grid(row=0, column=0, sticky='nw', padx=8, pady=8)
 
         self.liste = ctk.CTkScrollableFrame(self.corps, fg_color="transparent")
@@ -55,7 +55,7 @@ class HistoriqueScreen(Screen):
             fill='x')
         ctk.CTkLabel(
             contenu, text=f'{", ".join(entree["extensions"])} — {entree["dossier"]}',
-            font=font_sous_titre(11), text_color="gray", anchor='w', wraplength=600,
+            font=font_sous_titre(11), text_color=ACCENT_GRIS, anchor='w', wraplength=600,
         ).pack(fill='x', pady=(2, 8))
 
         boutons = ctk.CTkFrame(contenu, fg_color="transparent")

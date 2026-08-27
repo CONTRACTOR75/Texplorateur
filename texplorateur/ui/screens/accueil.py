@@ -1,7 +1,7 @@
 import customtkinter as ctk
 
 from ...historique import charger_historique, libelle_historique
-from ..theme import font_normal, font_sous_titre, font_titre
+from ..theme import ACCENT_GRIS, font_normal, font_sous_titre, font_titre
 from .base import Screen
 
 
@@ -20,7 +20,7 @@ class AccueilScreen(Screen):
         # "Texplorateur" est le nom de l'app : pas de traduction.
         ctk.CTkLabel(centre, text="Texplorateur", font=font_titre(28)).pack(pady=(8, 2))
         self.label_sous_titre = ctk.CTkLabel(
-            centre, text=self.t("accueil.sous_titre"), font=font_sous_titre(13), text_color="gray",
+            centre, text=self.t("accueil.sous_titre"), font=font_sous_titre(13), text_color=ACCENT_GRIS,
         )
         self.label_sous_titre.pack(pady=(0, 24))
 
@@ -32,11 +32,11 @@ class AccueilScreen(Screen):
         self.bouton_nouvelle_recherche.pack()
 
         self.label_raccourci = ctk.CTkLabel(
-            centre, text="", font=font_sous_titre(12), text_color="gray", cursor="hand2",
+            centre, text="", font=font_sous_titre(12), text_color=ACCENT_GRIS, cursor="hand2",
         )
         self.label_raccourci.pack(pady=(18, 0))
 
-        self.label_stats = ctk.CTkLabel(centre, text="", font=font_sous_titre(11), text_color="gray")
+        self.label_stats = ctk.CTkLabel(centre, text="", font=font_sous_titre(11), text_color=ACCENT_GRIS)
         self.label_stats.pack(pady=(4, 0))
 
     def retraduire(self):

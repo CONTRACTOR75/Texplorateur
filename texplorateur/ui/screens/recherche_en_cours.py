@@ -2,7 +2,7 @@ import customtkinter as ctk
 
 from ...readers import tronquer_chemin
 from ..cute_animation import CuteAnimation
-from ..theme import font_sous_titre
+from ..theme import ACCENT_GRIS, font_sous_titre
 from .base import Screen
 
 
@@ -22,7 +22,7 @@ class RechercheEnCoursScreen(Screen):
         self.barre = ctk.CTkProgressBar(centre, mode="indeterminate", width=280)
         self.barre.pack(pady=(20, 8))
 
-        self.label_compteur = ctk.CTkLabel(centre, text="", font=font_sous_titre(11), text_color="gray")
+        self.label_compteur = ctk.CTkLabel(centre, text="", font=font_sous_titre(11), text_color=ACCENT_GRIS)
         self.label_compteur.pack()
 
         self.bouton_annuler = ctk.CTkButton(

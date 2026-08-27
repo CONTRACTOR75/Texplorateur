@@ -2,7 +2,7 @@ import webbrowser
 
 import customtkinter as ctk
 
-from ..theme import ACCENT_LIEN, ACCENT_LIEN_SURVOL, font_normal, font_sous_titre, font_titre
+from ..theme import ACCENT_GRIS, ACCENT_LIEN, ACCENT_LIEN_SURVOL, font_normal, font_sous_titre, font_titre
 from .base import Screen
 
 VERSION = "2.0"
@@ -29,7 +29,7 @@ class AProposScreen(Screen):
         # "Texplorateur" est le nom de l'app : pas de traduction.
         ctk.CTkLabel(centre, text="Texplorateur", font=font_titre(22)).pack(pady=(6, 0))
         self.label_version = ctk.CTkLabel(
-            centre, text=self.t("a_propos.version", version=VERSION), font=font_sous_titre(12), text_color="gray")
+            centre, text=self.t("a_propos.version", version=VERSION), font=font_sous_titre(12), text_color=ACCENT_GRIS)
         self.label_version.pack(pady=(0, 16))
 
         self.label_description = ctk.CTkLabel(
@@ -39,7 +39,7 @@ class AProposScreen(Screen):
         ligne_auteur = ctk.CTkFrame(centre, fg_color="transparent")
         ligne_auteur.pack()
         self.label_auteur_prefixe = ctk.CTkLabel(
-            ligne_auteur, text=self.t("a_propos.auteur_prefixe"), font=font_sous_titre(12), text_color="gray")
+            ligne_auteur, text=self.t("a_propos.auteur_prefixe"), font=font_sous_titre(12), text_color=ACCENT_GRIS)
         self.label_auteur_prefixe.pack(side='left')
         # "CONTRACTOR75" est un nom propre : pas de traduction.
         self.lien_auteur = self._creer_lien(
@@ -52,7 +52,7 @@ class AProposScreen(Screen):
         if URL_FEEDBACK:
             self.label_feedback_message = ctk.CTkLabel(
                 centre, text=self.t("a_propos.feedback_message"), font=font_sous_titre(11),
-                text_color="gray", justify="center", wraplength=300,
+                text_color=ACCENT_GRIS, justify="center", wraplength=300,
             )
             self.label_feedback_message.pack(pady=(20, 2))
             self.lien_feedback = self._creer_lien(

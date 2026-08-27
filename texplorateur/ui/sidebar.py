@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from .theme import font_normal, font_sous_titre, font_titre
+from .theme import ACCENT_GRIS, font_normal, font_sous_titre, font_titre
 
 # Les libellés viennent de i18n ("commun.<nom>") — seule l'icône est fixe.
 NAVIGATION = [
@@ -50,7 +50,7 @@ class Sidebar(ctk.CTkFrame):
         # "Texplorateur" est le nom de l'app : pas de traduction, comme une marque.
         ctk.CTkLabel(self.frame_titre, text=" Texplorateur", font=font_titre(16)).pack(side='left')
         self.label_sous_titre = ctk.CTkLabel(
-            self, text=self.app.i18n.t("sidebar.sous_titre"), font=font_sous_titre(11), text_color="gray")
+            self, text=self.app.i18n.t("sidebar.sous_titre"), font=font_sous_titre(11), text_color=ACCENT_GRIS)
         self.label_sous_titre.pack(anchor='w', padx=18, pady=(0, 24))
 
         self.bouton_nouvelle_recherche = ctk.CTkButton(

@@ -3,7 +3,7 @@ import customtkinter as ctk
 from ...explorateur import ouvrir_emplacement
 from ...son import play_sound
 from ..confetti import ConfettiCanvas
-from ..theme import ACCENT_ERREUR, ACCENT_SUCCES, font_normal, font_sous_titre, font_titre
+from ..theme import ACCENT_ERREUR, ACCENT_GRIS, ACCENT_SUCCES, font_normal, font_sous_titre, font_titre
 from .base import Screen
 
 
@@ -35,7 +35,7 @@ class ResultatsScreen(Screen):
         self.frame_resultats = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self.frame_resultats.pack(fill='both', expand=True, padx=16, pady=(4, 16))
 
-        self.label_tooltip = ctk.CTkLabel(self, text="", text_color="gray", font=font_sous_titre(11))
+        self.label_tooltip = ctk.CTkLabel(self, text="", text_color=ACCENT_GRIS, font=font_sous_titre(11))
         self.label_tooltip.pack(fill='x', padx=24, pady=(0, 8))
 
     def retraduire(self):
@@ -86,5 +86,5 @@ class ResultatsScreen(Screen):
 
         if contexte:
             ctk.CTkLabel(
-                carte, text=contexte, anchor='w', justify='left', text_color="gray", wraplength=760,
+                carte, text=contexte, anchor='w', justify='left', text_color=ACCENT_GRIS, wraplength=760,
             ).pack(fill='x', padx=8, pady=(2, 8))

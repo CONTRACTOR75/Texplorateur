@@ -4,7 +4,7 @@ from tkinter import filedialog, messagebox
 import customtkinter as ctk
 
 from ...config import EXTENSIONS_DISPONIBLES
-from ..theme import font_normal, font_sous_titre, font_titre
+from ..theme import ACCENT_GRIS, font_normal, font_sous_titre, font_titre
 from .base import Screen
 
 
@@ -40,7 +40,7 @@ class FormulaireScreen(Screen):
         dossier_frame = ctk.CTkFrame(contenu, fg_color="transparent")
         dossier_frame.pack(fill='x', pady=(2, 16))
         self.label_dossier = ctk.CTkLabel(
-            dossier_frame, text=self.t("formulaire.dossier_non_selectionne"), text_color="gray", anchor='w')
+            dossier_frame, text=self.t("formulaire.dossier_non_selectionne"), text_color=ACCENT_GRIS, anchor='w')
         self.label_dossier.pack(side='left', fill='x', expand=True)
         self.bouton_parcourir = ctk.CTkButton(
             dossier_frame, text=self.t("commun.parcourir"), width=100, command=self._choisir_dossier)

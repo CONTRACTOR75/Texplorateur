@@ -6,7 +6,7 @@ import customtkinter as ctk
 from ...config import EXTENSIONS_DISPONIBLES, THEMES_DISPONIBLES
 from ...historique import charger_historique, effacer_historique
 from ...i18n import LANGUES_DISPONIBLES
-from ..theme import font_normal, font_sous_titre, font_titre
+from ..theme import ACCENT_GRIS, font_normal, font_sous_titre, font_titre
 from .base import Screen
 
 NOM_PAR_CODE = dict(LANGUES_DISPONIBLES)
@@ -24,7 +24,7 @@ class ParametresScreen(Screen):
         self.label_titre.pack(anchor='w', pady=(0, 10))
 
         self.label_sous_titre = ctk.CTkLabel(
-            conteneur, text=self.t("parametres.sous_titre"), font=font_sous_titre(12), text_color="gray",
+            conteneur, text=self.t("parametres.sous_titre"), font=font_sous_titre(12), text_color=ACCENT_GRIS,
         )
         self.label_sous_titre.pack(anchor='w', pady=(0, 6))
 
@@ -33,7 +33,7 @@ class ParametresScreen(Screen):
             conteneur, text=self.t("parametres.section_langue"), font=font_normal(14, "bold"))
         self.label_section_langue.pack(anchor='w')
         self.label_langue = ctk.CTkLabel(
-            conteneur, text=self.t("parametres.langue_label"), font=font_sous_titre(12), text_color="gray",
+            conteneur, text=self.t("parametres.langue_label"), font=font_sous_titre(12), text_color=ACCENT_GRIS,
         )
         self.label_langue.pack(anchor='w', pady=(0, 6))
         self.langue_var = tk.StringVar(value=NOM_PAR_CODE.get(app.config.langue, NOM_PAR_CODE[app.i18n.langue]))
@@ -48,7 +48,7 @@ class ParametresScreen(Screen):
             conteneur, text=self.t("parametres.section_apparence"), font=font_normal(14, "bold"))
         self.label_section_apparence.pack(anchor='w')
         self.label_theme = ctk.CTkLabel(
-            conteneur, text=self.t("parametres.theme_label"), font=font_sous_titre(12), text_color="gray",
+            conteneur, text=self.t("parametres.theme_label"), font=font_sous_titre(12), text_color=ACCENT_GRIS,
         )
         self.label_theme.pack(anchor='w', pady=(0, 6))
         self.theme_var = tk.StringVar(value=app.config.theme)
@@ -61,7 +61,7 @@ class ParametresScreen(Screen):
             conteneur, text=self.t("parametres.section_recherche"), font=font_normal(14, "bold"))
         self.label_section_recherche.pack(anchor='w')
         self.label_extensions = ctk.CTkLabel(
-            conteneur, text=self.t("parametres.extensions_label"), font=font_sous_titre(12), text_color="gray",
+            conteneur, text=self.t("parametres.extensions_label"), font=font_sous_titre(12), text_color=ACCENT_GRIS,
         )
         self.label_extensions.pack(anchor='w', pady=(0, 6))
         extensions_frame = ctk.CTkFrame(conteneur, fg_color="transparent")
@@ -77,7 +77,7 @@ class ParametresScreen(Screen):
         self.label_section_historique = ctk.CTkLabel(
             conteneur, text=self.t("parametres.section_historique"), font=font_normal(14, "bold"))
         self.label_section_historique.pack(anchor='w')
-        self.label_historique = ctk.CTkLabel(conteneur, text="", font=font_sous_titre(12), text_color="gray")
+        self.label_historique = ctk.CTkLabel(conteneur, text="", font=font_sous_titre(12), text_color=ACCENT_GRIS)
         self.label_historique.pack(anchor='w', pady=(0, 8))
         self.bouton_effacer_historique = ctk.CTkButton(
             conteneur, text=self.t("parametres.effacer_historique"), fg_color="transparent", border_width=1,
