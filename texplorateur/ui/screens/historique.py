@@ -13,11 +13,17 @@ class HistoriqueScreen(Screen):
 
         self.label_titre = ctk.CTkLabel(self, text=self.t("historique.titre"), font=font_titre(20))
         self.label_titre.pack(anchor='w', padx=24, pady=(24, 4))
-        self.label_vide = ctk.CTkLabel(
-            self, text=self.t("historique.vide"), font=font_sous_titre(12), text_color="gray")
+        self.corps = ctk.CTkFrame(self, fg_color="transparent")
+        self.corps.pack(fill='both', expand=True, padx=16, pady=(4, 16))
+        self.corps.grid_columnconfigure(0, weight=1)
+        self.corps.grid_rowconfigure(0, weight=1)
 
-        self.liste = ctk.CTkScrollableFrame(self, fg_color="transparent")
-        self.liste.pack(fill='both', expand=True, padx=16, pady=(4, 16))
+        self.label_vide = ctk.CTkLabel(
+            self.corps, text=self.t("historique.vide"), font=font_sous_titre(12), text_color="gray")
+        self.label_vide.grid(row=0, column=0, sticky='nw', padx=8, pady=8)
+
+        self.liste = ctk.CTkScrollableFrame(self.corps, fg_color="transparent")
+        self.liste.grid(row=0, column=0, sticky='nsew')
 
     def retraduire(self):
         self.label_titre.configure(text=self.t("historique.titre"))
@@ -29,9 +35,11 @@ class HistoriqueScreen(Screen):
 
         historique = charger_historique()
         if not historique:
-            self.label_vide.pack(anchor='w', padx=24, pady=(8, 0))
+            self.liste.grid_remove()
+            self.label_vide.grid()
             return
-        self.label_vide.pack_forget()
+        self.label_vide.grid_remove()
+        self.liste.grid()
 
         for entree in historique:
             self._afficher_entree(entree)

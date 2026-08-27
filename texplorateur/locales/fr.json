@@ -53,7 +53,7 @@
   },
   "historique": {
     "titre": "Historique des recherches",
-    "vide": "Aucune recherche pour l'instant.",
+    "vide": "Effectuez une recherche pour la voir s'afficher ici.",
     "confirmer_suppression_titre": "Supprimer cette recherche",
     "confirmer_suppression_message": "Supprimer définitivement \"{phrase}\" de l'historique ?"
   },

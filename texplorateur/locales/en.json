@@ -53,7 +53,7 @@
   },
   "historique": {
     "titre": "Search history",
-    "vide": "No searches yet.",
+    "vide": "Run a search to see it show up here.",
     "confirmer_suppression_titre": "Delete this search",
     "confirmer_suppression_message": "Permanently delete \"{phrase}\" from history?"
   },
