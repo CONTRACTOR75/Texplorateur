@@ -9,6 +9,7 @@
     "annuler": "Cancel",
     "relancer": "↻ Rerun",
     "resultats": "📄 Results",
+    "supprimer": "🗑️",
     "rechercher": "Search",
     "parcourir": "Browse…",
     "retour_accueil": "← Home"
@@ -52,7 +53,9 @@
   },
   "historique": {
     "titre": "Search history",
-    "vide": "No searches yet."
+    "vide": "No searches yet.",
+    "confirmer_suppression_titre": "Delete this search",
+    "confirmer_suppression_message": "Permanently delete \"{phrase}\" from history?"
   },
   "parametres": {
     "titre": "Settings",

@@ -9,6 +9,7 @@
     "annuler": "Annuler",
     "relancer": "↻ Relancer",
     "resultats": "📄 Résultats",
+    "supprimer": "🗑️",
     "rechercher": "Rechercher",
     "parcourir": "Parcourir…",
     "retour_accueil": "← Accueil"
@@ -52,7 +53,9 @@
   },
   "historique": {
     "titre": "Historique des recherches",
-    "vide": "Aucune recherche pour l'instant."
+    "vide": "Aucune recherche pour l'instant.",
+    "confirmer_suppression_titre": "Supprimer cette recherche",
+    "confirmer_suppression_message": "Supprimer définitivement \"{phrase}\" de l'historique ?"
   },
   "parametres": {
     "titre": "Paramètres",

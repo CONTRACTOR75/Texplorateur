@@ -1,7 +1,9 @@
+from tkinter import messagebox
+
 import customtkinter as ctk
 
-from ...historique import charger_historique
-from ..theme import font_normal, font_sous_titre, font_titre
+from ...historique import charger_historique, supprimer_historique
+from ..theme import ACCENT_ERREUR, font_normal, font_sous_titre, font_titre
 from .base import Screen
 
 
@@ -66,3 +68,17 @@ class HistoriqueScreen(Screen):
             text_color=("gray10", "gray90"),
             command=lambda e=entree: self.app.lancer_recherche(e["phrase"], e["extensions"], e["dossier"]),
         ).pack(side='left')
+
+        ctk.CTkButton(
+            boutons, text=self.t("commun.supprimer"), width=36, fg_color="transparent", border_width=1,
+            text_color=ACCENT_ERREUR, hover_color=("#f5d0d0", "#4a2626"),
+            command=lambda e=entree: self._supprimer(e),
+        ).pack(side='left', padx=(8, 0))
+
+    def _supprimer(self, entree):
+        if messagebox.askyesno(
+            self.t("historique.confirmer_suppression_titre"),
+            self.t("historique.confirmer_suppression_message", phrase=entree["phrase"]),
+        ):
+            supprimer_historique(entree)
+            self.on_show()

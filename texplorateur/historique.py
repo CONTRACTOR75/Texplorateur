@@ -29,6 +29,22 @@ def sauvegarder_historique(entree):
     return historique
 
 
+def supprimer_historique(entree):
+    """Retire une entrée précise de l'historique (même critère d'identité
+    que la déduplication dans sauvegarder_historique : phrase + dossier)."""
+    historique = charger_historique()
+    historique = [
+        h for h in historique
+        if not (h["phrase"] == entree["phrase"] and h["dossier"] == entree["dossier"])
+    ]
+    try:
+        with open(HISTORIQUE_PATH, 'w', encoding='utf-8') as f:
+            json.dump(historique, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
+    return historique
+
+
 def effacer_historique():
     try:
         with open(HISTORIQUE_PATH, 'w', encoding='utf-8') as f:
