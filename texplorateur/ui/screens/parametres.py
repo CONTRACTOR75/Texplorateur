@@ -16,7 +16,11 @@ class ParametresScreen(Screen):
         conteneur = ctk.CTkFrame(self, fg_color="transparent")
         conteneur.pack(fill='both', expand=True, padx=32, pady=28)
 
-        ctk.CTkLabel(conteneur, text="Paramètres", font=font_titre(20)).pack(anchor='w', pady=(0, 20))
+        ctk.CTkLabel(conteneur, text="Paramètres", font=font_titre(20)).pack(anchor='w', pady=(0, 10))
+
+        ctk.CTkLabel(
+                    conteneur, text="Paramètrez et gerez ici vos options par défaut", font=font_sous_titre(12), text_color="gray",
+                ).pack(anchor='w', pady=(0, 6))
 
         # Thème
         ctk.CTkLabel(conteneur, text="Apparence", font=font_normal(14, "bold")).pack(anchor='w')
