@@ -5,22 +5,15 @@ import customtkinter as ctk
 from ..son import play_sound
 from .theme import ACCENT_ANIMATION, font_normal
 
-MESSAGES = [
-    "Cherche dans les fichiers…",
-    "Parcourt les dossiers…",
-    "Analyse le contenu…",
-    "Presque fini…",
-    "Patiente un peu…",
-]
-
 LOADER_CHARS = ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷']
 
 
 class CuteAnimation:
     """Indicateur d'activité animé, affiché pendant une recherche."""
 
-    def __init__(self, parent):
+    def __init__(self, parent, app):
         self.parent = parent
+        self.app = app
         self.frame = ctk.CTkFrame(parent, fg_color="transparent")
 
         self.label_loader = ctk.CTkLabel(
@@ -33,7 +26,7 @@ class CuteAnimation:
         )
         self.label_message.pack(pady=(4, 0))
 
-        self._messages = itertools.cycle(MESSAGES)
+        self._messages = None
         self._loader_chars = itertools.cycle(LOADER_CHARS)
         self.is_running = False
 
@@ -45,6 +38,11 @@ class CuteAnimation:
 
     def start(self):
         self.is_running = True
+        # Reconstruit le cycle des messages à chaque lancement plutôt qu'une
+        # fois pour toutes : reflète la langue courante même si elle a
+        # changé depuis la construction du widget.
+        messages = self.app.i18n.t("recherche_en_cours.messages")
+        self._messages = itertools.cycle(messages if isinstance(messages, list) else [messages])
         play_sound("start")
         self._animate()
 

@@ -22,9 +22,6 @@ class TexplorateurApp:
         ctk.set_appearance_mode(self.config.theme)
         ctk.set_default_color_theme("blue")
 
-        # Service de traduction, prêt à être consommé par les écrans
-        # (app.i18n.t("cle")) — aucun écran n'y est encore câblé, seule
-        # l'infrastructure est en place pour l'instant.
         self.i18n = Traducteur(self.config.langue)
 
         self.root = ctk.CTk()
@@ -52,7 +49,7 @@ class TexplorateurApp:
         # géométrie sur toute la fenêtre — visible comme un flash/décalage
         # du contenu à chaque navigation.
         self.sidebar = Sidebar(
-            self.root, on_navigate=self.navigate, on_nouvelle_recherche=lambda: self.navigate("formulaire"))
+            self.root, self, on_navigate=self.navigate, on_nouvelle_recherche=lambda: self.navigate("formulaire"))
         self.sidebar.grid(row=0, column=0, sticky="ns")
 
         self.content = ctk.CTkFrame(self.root, fg_color="transparent")
@@ -131,6 +128,21 @@ class TexplorateurApp:
         resultats = [tuple(r) for r in entree.get("resultats", [])]
         total = entree.get("total", len(resultats))
         self.navigate("resultats", resultats=resultats, total=total, silencieux=True)
+
+    # -- Langue --
+
+    def changer_langue(self, code):
+        self.i18n.definir_langue(code)
+        self.config.definir_langue(code)
+
+        # Tous les écrans sont retraduits, pas seulement celui affiché : sans
+        # ça, un écran masqué garderait ses textes statiques dans l'ancienne
+        # langue jusqu'au redémarrage de l'app (son __init__ ne s'exécute
+        # qu'une fois). Le contenu dynamique (compteurs, résultats...) se
+        # met à jour tout seul au prochain on_show, dans la langue courante.
+        self.sidebar.retraduire()
+        for screen in self.screens.values():
+            screen.retraduire()
 
     def run(self):
         self.root.mainloop()

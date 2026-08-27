@@ -2,11 +2,12 @@ import customtkinter as ctk
 
 from .theme import font_normal, font_sous_titre, font_titre
 
+# Les libellés viennent de i18n ("commun.<nom>") — seule l'icône est fixe.
 NAVIGATION = [
-    ("accueil", "🏠", "Accueil"),
-    ("historique", "🕓", "Historique"),
-    ("parametres", "⚙️", "Paramètres"),
-    ("a_propos", "ℹ️", "À propos"),
+    ("accueil", "🏠"),
+    ("historique", "🕓"),
+    ("parametres", "⚙️"),
+    ("a_propos", "ℹ️"),
 ]
 
 
@@ -14,13 +15,14 @@ class Sidebar(ctk.CTkFrame):
     LARGEUR_ETENDUE = 210
     LARGEUR_REPLIEE = 60
 
-    def __init__(self, parent, on_navigate, on_nouvelle_recherche):
+    def __init__(self, parent, app, on_navigate, on_nouvelle_recherche):
         super().__init__(parent, width=self.LARGEUR_ETENDUE, corner_radius=0)
         # Les enfants sont placés avec pack() : c'est pack_propagate (pas
         # grid_propagate, qui ne concerne que des enfants gérés par grid())
         # qu'il faut désactiver pour empêcher le contenu d'imposer sa propre
         # largeur et d'écraser le width= explicite qu'on pilote au clic.
         self.pack_propagate(False)
+        self.app = app
         self._on_navigate = on_navigate
         self._repliee = False
 
@@ -33,29 +35,42 @@ class Sidebar(ctk.CTkFrame):
         )
         self.bouton_toggle.pack(side='right')
 
+        # "Texplorateur" est le nom de l'app : pas de traduction, comme une marque.
         self.label_titre = ctk.CTkLabel(self, text="🗂️ Texplorateur", font=font_titre(16))
         self.label_titre.pack(anchor='w', padx=18, pady=(4, 2))
         self.label_sous_titre = ctk.CTkLabel(
-            self, text="Recherche intelligente", font=font_sous_titre(11), text_color="gray")
+            self, text=self.app.i18n.t("sidebar.sous_titre"), font=font_sous_titre(11), text_color="gray")
         self.label_sous_titre.pack(anchor='w', padx=18, pady=(0, 24))
 
         self.bouton_nouvelle_recherche = ctk.CTkButton(
-            self, text="+ Nouvelle recherche", command=on_nouvelle_recherche, height=36)
+            self, text=self.app.i18n.t("commun.nouvelle_recherche"), command=on_nouvelle_recherche, height=36)
         self.bouton_nouvelle_recherche.pack(fill='x', padx=16, pady=(0, 24))
 
         self._boutons = {}
-        for nom, icone, libelle in NAVIGATION:
+        for nom, icone in NAVIGATION:
             btn = ctk.CTkButton(
-                self, text=f"{icone}  {libelle}", anchor='w', fg_color="transparent",
+                self, text=self._libelle_nav(nom, icone), anchor='w', fg_color="transparent",
                 text_color=("gray10", "gray90"), hover_color=("gray85", "gray25"),
                 font=font_normal(13), command=lambda n=nom: self._on_navigate(n),
             )
             btn.pack(fill='x', padx=10, pady=3)
-            self._boutons[nom] = (btn, icone, libelle)
+            self._boutons[nom] = (btn, icone)
+
+    def _libelle_nav(self, nom, icone):
+        if self._repliee:
+            return icone
+        return f"{icone}  {self.app.i18n.t(f'commun.{nom}')}"
 
     def definir_actif(self, nom):
-        for n, (btn, _, _) in self._boutons.items():
+        for n, (btn, _) in self._boutons.items():
             btn.configure(fg_color=("gray80", "gray28") if n == nom else "transparent")
+
+    def retraduire(self):
+        self.label_sous_titre.configure(text=self.app.i18n.t("sidebar.sous_titre"))
+        self.bouton_nouvelle_recherche.configure(
+            text="+" if self._repliee else self.app.i18n.t("commun.nouvelle_recherche"))
+        for nom, (btn, icone) in self._boutons.items():
+            btn.configure(text=self._libelle_nav(nom, icone))
 
     def _basculer(self):
         self._repliee = not self._repliee
@@ -71,10 +86,7 @@ class Sidebar(ctk.CTkFrame):
             # l'ordre de pack, plutôt qu'à la fin (après le bouton "+").
             self.label_sous_titre.pack(anchor='w', padx=18, pady=(0, 24), before=self.bouton_nouvelle_recherche)
             self.label_titre.pack(anchor='w', padx=18, pady=(4, 2), before=self.label_sous_titre)
-            self.bouton_nouvelle_recherche.configure(text="+ Nouvelle recherche")
+            self.bouton_nouvelle_recherche.configure(text=self.app.i18n.t("commun.nouvelle_recherche"))
 
-        for btn, icone, libelle in self._boutons.values():
-            if self._repliee:
-                btn.configure(text=icone, anchor='center')
-            else:
-                btn.configure(text=f"{icone}  {libelle}", anchor='w')
+        for nom, (btn, icone) in self._boutons.items():
+            btn.configure(text=self._libelle_nav(nom, icone), anchor='center' if self._repliee else 'w')

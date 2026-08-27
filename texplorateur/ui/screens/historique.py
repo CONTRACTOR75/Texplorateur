@@ -9,13 +9,17 @@ class HistoriqueScreen(Screen):
     def __init__(self, parent, app):
         super().__init__(parent, app)
 
-        ctk.CTkLabel(self, text="Historique des recherches", font=font_titre(20)).pack(
-            anchor='w', padx=24, pady=(24, 4))
+        self.label_titre = ctk.CTkLabel(self, text=self.t("historique.titre"), font=font_titre(20))
+        self.label_titre.pack(anchor='w', padx=24, pady=(24, 4))
         self.label_vide = ctk.CTkLabel(
-            self, text="Aucune recherche pour l'instant.", font=font_sous_titre(12), text_color="gray")
+            self, text=self.t("historique.vide"), font=font_sous_titre(12), text_color="gray")
 
         self.liste = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self.liste.pack(fill='both', expand=True, padx=16, pady=(4, 16))
+
+    def retraduire(self):
+        self.label_titre.configure(text=self.t("historique.titre"))
+        self.label_vide.configure(text=self.t("historique.vide"))
 
     def on_show(self, **kwargs):
         for widget in self.liste.winfo_children():
@@ -52,13 +56,13 @@ class HistoriqueScreen(Screen):
         # plutôt que de planter ou d'afficher un écran vide trompeur.
         resultats_disponibles = "resultats" in entree
         ctk.CTkButton(
-            boutons, text="📄 Résultats", width=110,
+            boutons, text=self.t("commun.resultats"), width=110,
             state="normal" if resultats_disponibles else "disabled",
             command=lambda e=entree: self.app.afficher_resultats_historique(e),
         ).pack(side='left', padx=(0, 8))
 
         ctk.CTkButton(
-            boutons, text="↻ Relancer", width=110, fg_color="transparent", border_width=1,
+            boutons, text=self.t("commun.relancer"), width=110, fg_color="transparent", border_width=1,
             text_color=("gray10", "gray90"),
             command=lambda e=entree: self.app.lancer_recherche(e["phrase"], e["extensions"], e["dossier"]),
         ).pack(side='left')
