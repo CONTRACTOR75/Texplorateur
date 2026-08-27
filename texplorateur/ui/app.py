@@ -4,6 +4,7 @@ from ..config import AppConfig
 from ..historique import sauvegarder_historique
 from ..i18n import Traducteur
 from ..recherche import MoteurRecherche
+from ..ressources import chemin_icone
 from .screens.a_propos import AProposScreen
 from .screens.accueil import AccueilScreen
 from .screens.formulaire import FormulaireScreen
@@ -28,6 +29,7 @@ class TexplorateurApp:
         self.root.title("Texplorateur")
         self.root.geometry("980x680")
         self.root.minsize(760, 540)
+        self._appliquer_icone()
         self.root.grid_columnconfigure(1, weight=1)
         self.root.grid_rowconfigure(0, weight=1)
 
@@ -40,6 +42,16 @@ class TexplorateurApp:
         self._ecran_actuel = None
         self._construire_layout()
         self.navigate("accueil")
+
+    def _appliquer_icone(self):
+        # `.ico` requis par iconbitmap() sous Windows : c'est bien le format
+        # de image.ico. Les dialogues (messagebox, etc.) héritent
+        # automatiquement de l'icône de leur fenêtre parente, donc ce seul
+        # appel couvre toute l'app — il n'y a qu'une fenêtre racine.
+        try:
+            self.root.iconbitmap(chemin_icone())
+        except Exception:
+            pass  # Ne bloque pas le lancement si l'icône est introuvable/invalide.
 
     def _construire_layout(self):
         # Sidebar et contenu restent gridés en permanence : basculer entre
