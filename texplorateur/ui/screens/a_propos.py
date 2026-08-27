@@ -10,6 +10,10 @@ VERSION = "2.0"
 # TODO(CONTRACTOR75) : remplacer par l'URL du portfolio.
 URL_PORTFOLIO = "https://aledi.netlify.app/"
 
+# TODO(CONTRACTOR75) : coller le lien du Google Form ici. Tant qu'il est
+# vide, le bloc "signaler un bug / avis" ne s'affiche pas du tout.
+URL_FEEDBACK = ""
+
 
 class AProposScreen(Screen):
     def __init__(self, parent, app):
@@ -38,20 +42,38 @@ class AProposScreen(Screen):
             ligne_auteur, text=self.t("a_propos.auteur_prefixe"), font=font_sous_titre(12), text_color="gray")
         self.label_auteur_prefixe.pack(side='left')
         # "CONTRACTOR75" est un nom propre : pas de traduction.
-        self.lien_auteur = ctk.CTkLabel(
-            ligne_auteur, text=" CONTRACTOR75", font=font_normal(12, "bold"),
-            text_color=ACCENT_LIEN, cursor="hand2",
-        )
-        self.lien_auteur.pack(side='left')
-        self.lien_auteur.bind("<Button-1>", self._ouvrir_portfolio)
-        self.lien_auteur.bind("<Enter>", lambda e: self.lien_auteur.configure(text_color=ACCENT_LIEN_SURVOL))
-        self.lien_auteur.bind("<Leave>", lambda e: self.lien_auteur.configure(text_color=ACCENT_LIEN))
+        self.lien_auteur = self._creer_lien(
+            ligne_auteur, " CONTRACTOR75", URL_PORTFOLIO, cote='left', font=font_normal(12, "bold"))
+
+        # Bloc feedback : entièrement absent tant qu'aucun lien n'est fourni,
+        # plutôt qu'affiché avec un lien mort ou désactivé.
+        self.label_feedback_message = None
+        self.lien_feedback = None
+        if URL_FEEDBACK:
+            self.label_feedback_message = ctk.CTkLabel(
+                centre, text=self.t("a_propos.feedback_message"), font=font_sous_titre(11),
+                text_color="gray", justify="center", wraplength=300,
+            )
+            self.label_feedback_message.pack(pady=(20, 2))
+            self.lien_feedback = self._creer_lien(
+                centre, self.t("a_propos.feedback_lien"), URL_FEEDBACK, cote=None, font=font_normal(12, "bold"))
+
+    def _creer_lien(self, parent, texte, url, cote, font):
+        lien = ctk.CTkLabel(parent, text=texte, font=font, text_color=ACCENT_LIEN, cursor="hand2")
+        if cote:
+            lien.pack(side=cote)
+        else:
+            lien.pack()
+        lien.bind("<Button-1>", lambda e, u=url: webbrowser.open(u) if u else None)
+        lien.bind("<Enter>", lambda e: lien.configure(text_color=ACCENT_LIEN_SURVOL))
+        lien.bind("<Leave>", lambda e: lien.configure(text_color=ACCENT_LIEN))
+        return lien
 
     def retraduire(self):
         self.label_version.configure(text=self.t("a_propos.version", version=VERSION))
         self.label_description.configure(text=self.t("a_propos.description"))
         self.label_auteur_prefixe.configure(text=self.t("a_propos.auteur_prefixe"))
-
-    def _ouvrir_portfolio(self, event=None):
-        if URL_PORTFOLIO:
-            webbrowser.open(URL_PORTFOLIO)
+        if self.label_feedback_message is not None:
+            self.label_feedback_message.configure(text=self.t("a_propos.feedback_message"))
+        if self.lien_feedback is not None:
+            self.lien_feedback.configure(text=self.t("a_propos.feedback_lien"))

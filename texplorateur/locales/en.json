@@ -76,6 +76,8 @@
   "a_propos": {
     "version": "Version {version}",
     "description": "Smart phrase search across your files\n.txt, .pdf, .docx and .xlsx.",
-    "auteur_prefixe": "Developed by"
+    "auteur_prefixe": "Developed by",
+    "feedback_message": "Found a bug, or just have feedback to share?",
+    "feedback_lien": "Right this way"
   }
 }

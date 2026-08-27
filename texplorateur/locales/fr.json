@@ -76,6 +76,8 @@
   "a_propos": {
     "version": "Version {version}",
     "description": "Recherche intelligente de phrases dans vos fichiers\n.txt, .pdf, .docx et .xlsx.",
-    "auteur_prefixe": "Développé par"
+    "auteur_prefixe": "Développé par",
+    "feedback_message": "Vous avez détecté un bug ou simplement un avis à partager en commentaire ?",
+    "feedback_lien": "C'est par ici"
   }
 }
