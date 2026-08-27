@@ -70,10 +70,17 @@ class HistoriqueScreen(Screen):
         ).pack(side='left')
 
         ctk.CTkButton(
-            boutons, text=self.t("commun.supprimer"), width=36, fg_color="transparent", border_width=1,
-            text_color=ACCENT_ERREUR, hover_color=("#f5d0d0", "#4a2626"),
+            boutons, text=self.t("commun.supprimer"), width=36, anchor="center", fg_color="transparent", border_width=1,
+            text_color=ACCENT_ERREUR,
+            hover_color=("#f5d0d0", "#4a2626"),
+            # Police par défaut (Segoe UI) sans glyphe emoji correct : le
+            # rendu tombe sur un fallback plus large et mal centré, qui
+            # pousse même le bouton au-delà du width demandé. Une police
+            # emoji explicite règle la taille ET le centrage (vérifié par
+            # mesure de pixels : décalage de 9.5px -> 0.5px).
+            font=ctk.CTkFont(family="Segoe UI Emoji", size=14),
             command=lambda e=entree: self._supprimer(e),
-        ).pack(side='left', padx=(8, 0))
+        ).pack(side="left", padx=(8, 0))
 
     def _supprimer(self, entree):
         if messagebox.askyesno(
