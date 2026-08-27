@@ -35,7 +35,7 @@ class ResultatsScreen(Screen):
         self.label_tooltip = ctk.CTkLabel(self, text="", text_color="gray", font=font_sous_titre(11))
         self.label_tooltip.pack(fill='x', padx=24, pady=(0, 8))
 
-    def on_show(self, resultats=None, total=0, **kwargs):
+    def on_show(self, resultats=None, total=0, silencieux=False, **kwargs):
         resultats = resultats or []
 
         for widget in self.frame_resultats.winfo_children():
@@ -50,8 +50,12 @@ class ResultatsScreen(Screen):
 
         self.label_statut.configure(
             text=f"{len(resultats)} fichier(s) trouvé(s) sur {total} scanné(s)", text_color=ACCENT_SUCCES)
-        play_sound("success")
-        self.after(150, self.confetti_canvas.throw_confetti)
+
+        # `silencieux` : consultation d'un résultat déjà archivé depuis
+        # l'historique — pas de fanfare, ce n'est pas une nouvelle trouvaille.
+        if not silencieux:
+            play_sound("success")
+            self.after(150, self.confetti_canvas.throw_confetti)
 
         for nom_fichier, chemin, contexte in resultats:
             self._afficher_resultat(nom_fichier, chemin, contexte)

@@ -111,9 +111,20 @@ class TexplorateurApp:
             return
 
         if self._recherche_courante:
-            sauvegarder_historique(self._recherche_courante)
+            entree = dict(self._recherche_courante)
+            # Les résultats sont sauvegardés avec l'entrée d'historique pour
+            # permettre de les reconsulter instantanément (bouton
+            # "Résultats"), sans avoir à relancer toute la recherche.
+            entree["resultats"] = resultats
+            entree["total"] = total
+            sauvegarder_historique(entree)
 
         self.navigate("resultats", resultats=resultats, total=total)
+
+    def afficher_resultats_historique(self, entree):
+        resultats = [tuple(r) for r in entree.get("resultats", [])]
+        total = entree.get("total", len(resultats))
+        self.navigate("resultats", resultats=resultats, total=total, silencieux=True)
 
     def run(self):
         self.root.mainloop()

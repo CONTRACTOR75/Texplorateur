@@ -44,7 +44,21 @@ class HistoriqueScreen(Screen):
             font=font_sous_titre(11), text_color="gray", anchor='w', wraplength=600,
         ).pack(fill='x', pady=(2, 8))
 
+        boutons = ctk.CTkFrame(contenu, fg_color="transparent")
+        boutons.pack(anchor='e')
+
+        # Les entrées enregistrées avant l'ajout de cette fonctionnalité
+        # n'ont pas de résultats sauvegardés : le bouton reste désactivé
+        # plutôt que de planter ou d'afficher un écran vide trompeur.
+        resultats_disponibles = "resultats" in entree
         ctk.CTkButton(
-            contenu, text="↻ Relancer", width=110,
+            boutons, text="📄 Résultats", width=110,
+            state="normal" if resultats_disponibles else "disabled",
+            command=lambda e=entree: self.app.afficher_resultats_historique(e),
+        ).pack(side='left', padx=(0, 8))
+
+        ctk.CTkButton(
+            boutons, text="↻ Relancer", width=110, fg_color="transparent", border_width=1,
+            text_color=("gray10", "gray90"),
             command=lambda e=entree: self.app.lancer_recherche(e["phrase"], e["extensions"], e["dossier"]),
-        ).pack(anchor='e')
+        ).pack(side='left')
