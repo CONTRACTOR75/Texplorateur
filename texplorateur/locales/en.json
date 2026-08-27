@@ -76,6 +76,6 @@
   "a_propos": {
     "version": "Version {version}",
     "description": "Smart phrase search across your files\n.txt, .pdf, .docx and .xlsx.",
-    "auteur": "Developed by CONTRACTOR75"
+    "auteur_prefixe": "Developed by"
   }
 }

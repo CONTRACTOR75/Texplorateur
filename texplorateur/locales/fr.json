@@ -76,6 +76,6 @@
   "a_propos": {
     "version": "Version {version}",
     "description": "Recherche intelligente de phrases dans vos fichiers\n.txt, .pdf, .docx et .xlsx.",
-    "auteur": "Développé par CONTRACTOR75"
+    "auteur_prefixe": "Développé par"
   }
 }
