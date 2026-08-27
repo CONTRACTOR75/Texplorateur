@@ -13,7 +13,10 @@ class AProposScreen(Screen):
         centre = ctk.CTkFrame(self, fg_color="transparent")
         centre.place(relx=0.5, rely=0.4, anchor="center")
 
-        ctk.CTkLabel(centre, text="🗂️", font=ctk.CTkFont(size=40)).pack()
+        # Police emoji explicite requise pour un centrage correct — voir
+        # accueil.py pour le détail (sans elle, Tk retombe sur un glyphe de
+        # secours mal centré et bien plus large que le libellé du dessous).
+        ctk.CTkLabel(centre, text="🗂️", font=ctk.CTkFont(family="Segoe UI Emoji", size=40)).pack()
         # "Texplorateur" est le nom de l'app : pas de traduction.
         ctk.CTkLabel(centre, text="Texplorateur", font=font_titre(22)).pack(pady=(6, 0))
         self.label_version = ctk.CTkLabel(
