@@ -2,6 +2,7 @@ import webbrowser
 
 import customtkinter as ctk
 
+from ...ressources import image_icone
 from ..theme import ACCENT_GRIS, ACCENT_LIEN, ACCENT_LIEN_SURVOL, font_normal, font_sous_titre, font_titre
 from .base import Screen
 
@@ -22,10 +23,7 @@ class AProposScreen(Screen):
         centre = ctk.CTkFrame(self, fg_color="transparent")
         centre.place(relx=0.5, rely=0.4, anchor="center")
 
-        # Police emoji explicite requise pour un centrage correct — voir
-        # accueil.py pour le détail (sans elle, Tk retombe sur un glyphe de
-        # secours mal centré et bien plus large que le libellé du dessous).
-        ctk.CTkLabel(centre, text="🗂️", font=ctk.CTkFont(family="Segoe UI Emoji", size=40)).pack()
+        ctk.CTkLabel(centre, image=image_icone(56), text="").pack()
         # "Texplorateur" est le nom de l'app : pas de traduction.
         ctk.CTkLabel(centre, text="Texplorateur", font=font_titre(22)).pack(pady=(6, 0))
         self.label_version = ctk.CTkLabel(

@@ -1,6 +1,7 @@
 import customtkinter as ctk
 
 from ...historique import charger_historique, libelle_historique
+from ...ressources import image_icone
 from ..theme import ACCENT_GRIS, font_normal, font_sous_titre, font_titre
 from .base import Screen
 
@@ -12,11 +13,7 @@ class AccueilScreen(Screen):
         centre = ctk.CTkFrame(self, fg_color="transparent")
         centre.place(relx=0.5, rely=0.42, anchor="center")
 
-        # Sans famille de police explicite, Segoe UI (police par défaut) n'a
-        # pas de glyphe emoji correct : Tk retombe sur un fallback bien plus
-        # large et mal centré (vérifié par mesure de pixels : décalage de
-        # 33.5px -> 0.5px une fois la police emoji précisée).
-        ctk.CTkLabel(centre, text="🗂️", font=ctk.CTkFont(family="Segoe UI Emoji", size=48)).pack()
+        ctk.CTkLabel(centre, image=image_icone(64), text="").pack()
         # "Texplorateur" est le nom de l'app : pas de traduction.
         ctk.CTkLabel(centre, text="Texplorateur", font=font_titre(28)).pack(pady=(8, 2))
         self.label_sous_titre = ctk.CTkLabel(

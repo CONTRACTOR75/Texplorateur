@@ -1,5 +1,6 @@
 import customtkinter as ctk
 
+from ..ressources import image_icone
 from .theme import ACCENT_GRIS, font_normal, font_sous_titre, font_titre
 
 # Les libellés viennent de i18n ("commun.<nom>") — seule l'icône est fixe.
@@ -35,20 +36,14 @@ class Sidebar(ctk.CTkFrame):
         )
         self.bouton_toggle.pack(side='right')
 
-        # Emoji et texte dans deux labels séparés, chacun avec la police
-        # adaptée. Les combiner dans un seul CTkLabel avec la police "Segoe
-        # UI" (qui ne contient pas ce glyphe) force Tk à substituer une
-        # police de secours — ce qui corrompt ensuite silencieusement la
-        # mesure de TOUT CTkFont("Segoe UI Emoji") créé plus tard dans le
-        # process (vérifié : ça faisait déborder et décentrer le logo de
-        # l'écran Accueil et de À propos, construits après la sidebar).
-        self.frame_titre = ctk.CTkFrame(self, fg_color="transparent")
-        self.frame_titre.pack(anchor='w', padx=18, pady=(4, 2))
-        ctk.CTkLabel(
-            self.frame_titre, text="🗂️", font=ctk.CTkFont(family="Segoe UI Emoji", size=16),
-        ).pack(side='left')
-        # "Texplorateur" est le nom de l'app : pas de traduction, comme une marque.
-        ctk.CTkLabel(self.frame_titre, text=" Texplorateur", font=font_titre(16)).pack(side='left')
+        # Logo réel (image.ico) + nom de l'app dans un seul label. Un aparté
+        # historique : ce label combinait avant un emoji et le texte dans
+        # une police sans glyphe emoji, ce qui corrompait silencieusement le
+        # rendu d'autres polices emoji créées plus tard dans le process ;
+        # utiliser une vraie image évite ce problème par construction.
+        self.label_titre = ctk.CTkLabel(
+            self, image=image_icone(20), text=" Texplorateur", compound="left", font=font_titre(16))
+        self.label_titre.pack(anchor='w', padx=18, pady=(4, 2))
         self.label_sous_titre = ctk.CTkLabel(
             self, text=self.app.i18n.t("sidebar.sous_titre"), font=font_sous_titre(11), text_color=ACCENT_GRIS)
         self.label_sous_titre.pack(anchor='w', padx=18, pady=(0, 24))
@@ -89,14 +84,14 @@ class Sidebar(ctk.CTkFrame):
         self.bouton_toggle.configure(text="»" if self._repliee else "«")
 
         if self._repliee:
-            self.frame_titre.pack_forget()
+            self.label_titre.pack_forget()
             self.label_sous_titre.pack_forget()
             self.bouton_nouvelle_recherche.configure(text="+")
         else:
             # `before=` réinsère les labels à leur position d'origine dans
             # l'ordre de pack, plutôt qu'à la fin (après le bouton "+").
             self.label_sous_titre.pack(anchor='w', padx=18, pady=(0, 24), before=self.bouton_nouvelle_recherche)
-            self.frame_titre.pack(anchor='w', padx=18, pady=(4, 2), before=self.label_sous_titre)
+            self.label_titre.pack(anchor='w', padx=18, pady=(4, 2), before=self.label_sous_titre)
             self.bouton_nouvelle_recherche.configure(text=self.app.i18n.t("commun.nouvelle_recherche"))
 
         for nom, (btn, icone) in self._boutons.items():
