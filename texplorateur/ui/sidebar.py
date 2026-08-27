@@ -52,6 +52,16 @@ class Sidebar(ctk.CTkFrame):
             self, text=self.app.i18n.t("commun.nouvelle_recherche"), command=on_nouvelle_recherche, height=36)
         self.bouton_nouvelle_recherche.pack(fill='x', padx=16, pady=(0, 24))
 
+        # "Quitter" ancré tout en bas, séparé de la navigation : pack(side=
+        # 'bottom') réserve son espace depuis le bas de la sidebar sans
+        # perturber l'empilement des éléments packés par le haut au-dessus.
+        self.bouton_quitter = ctk.CTkButton(
+            self, text=self._libelle_bouton("quitter"), anchor='w', fg_color="transparent",
+            text_color=("gray10", "gray90"), hover_color=("gray85", "gray25"),
+            font=font_normal(13), command=lambda: self.app.demander_quitter(),
+        )
+        self.bouton_quitter.pack(side='bottom', fill='x', padx=10, pady=(3, 12))
+
         self._boutons = {}
         for nom, icone in NAVIGATION:
             btn = ctk.CTkButton(
@@ -67,6 +77,12 @@ class Sidebar(ctk.CTkFrame):
             return icone
         return f"{icone}  {self.app.i18n.t(f'commun.{nom}')}"
 
+    def _libelle_bouton(self, cle):
+        # "commun.quitter" contient déjà "icône + espace + texte" (voir
+        # locales/*.json) ; en mode replié on n'en garde que l'icône.
+        libelle = self.app.i18n.t(f"commun.{cle}")
+        return libelle.split(maxsplit=1)[0] if self._repliee else libelle
+
     def definir_actif(self, nom):
         for n, (btn, _) in self._boutons.items():
             btn.configure(fg_color=("gray80", "gray28") if n == nom else "transparent")
@@ -75,6 +91,7 @@ class Sidebar(ctk.CTkFrame):
         self.label_sous_titre.configure(text=self.app.i18n.t("sidebar.sous_titre"))
         self.bouton_nouvelle_recherche.configure(
             text="+" if self._repliee else self.app.i18n.t("commun.nouvelle_recherche"))
+        self.bouton_quitter.configure(text=self._libelle_bouton("quitter"))
         for nom, (btn, icone) in self._boutons.items():
             btn.configure(text=self._libelle_nav(nom, icone))
 
@@ -96,3 +113,6 @@ class Sidebar(ctk.CTkFrame):
 
         for nom, (btn, icone) in self._boutons.items():
             btn.configure(text=self._libelle_nav(nom, icone), anchor='center' if self._repliee else 'w')
+
+        self.bouton_quitter.configure(
+            text=self._libelle_bouton("quitter"), anchor='center' if self._repliee else 'w')

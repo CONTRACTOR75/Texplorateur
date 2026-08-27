@@ -12,7 +12,14 @@
     "supprimer": "🗑️",
     "rechercher": "Search",
     "parcourir": "Browse…",
-    "retour_accueil": "← Home"
+    "retour_accueil": "← Home",
+    "quitter": "🚪  Quit"
+  },
+  "quitter": {
+    "titre": "Quit application",
+    "message": "Are you sure you want to quit?",
+    "oui": "Yes",
+    "non": "No"
   },
   "sidebar": {
     "titre": "🗂️ Texplorateur",

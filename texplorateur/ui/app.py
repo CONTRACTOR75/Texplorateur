@@ -5,6 +5,7 @@ from ..historique import sauvegarder_historique
 from ..i18n import Traducteur
 from ..recherche import MoteurRecherche
 from ..ressources import chemin_icone
+from .modal_confirmation import ModalConfirmation
 from .screens.a_propos import AProposScreen
 from .screens.accueil import AccueilScreen
 from .screens.formulaire import FormulaireScreen
@@ -32,6 +33,9 @@ class TexplorateurApp:
         self._appliquer_icone()
         self.root.grid_columnconfigure(1, weight=1)
         self.root.grid_rowconfigure(0, weight=1)
+        # Le "X" de la fenêtre passe aussi par la confirmation, plutôt que
+        # de fermer sans demander alors que le bouton "Quitter" le fait.
+        self.root.protocol("WM_DELETE_WINDOW", self.demander_quitter)
 
         # État de la recherche en cours, mis à jour depuis le thread de
         # recherche : simple mutation de dict, aucun accès Tk depuis ce thread.
@@ -155,6 +159,18 @@ class TexplorateurApp:
         self.sidebar.retraduire()
         for screen in self.screens.values():
             screen.retraduire()
+
+    # -- Cycle de vie --
+
+    def demander_quitter(self):
+        ModalConfirmation(
+            self.root,
+            titre=self.i18n.t("quitter.titre"),
+            message=self.i18n.t("quitter.message"),
+            texte_oui=self.i18n.t("quitter.oui"),
+            texte_non=self.i18n.t("quitter.non"),
+            on_confirmer=self.root.destroy,
+        )
 
     def run(self):
         self.root.mainloop()
