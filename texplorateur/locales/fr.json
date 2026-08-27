@@ -1,0 +1,90 @@
+{
+  "commun": {
+    "nouvelle_recherche": "+ Nouvelle recherche",
+    "accueil": "Accueil",
+    "historique": "Historique",
+    "parametres": "Paramètres",
+    "a_propos": "À propos",
+    "ouvrir": "📂 Ouvrir",
+    "annuler": "Annuler",
+    "relancer": "↻ Relancer",
+    "resultats": "📄 Résultats",
+    "supprimer": "🗑️",
+    "rechercher": "Rechercher",
+    "parcourir": "Parcourir…",
+    "retour_accueil": "← Accueil",
+    "quitter": "🚪  Quitter"
+  },
+  "quitter": {
+    "titre": "Quitter l'application",
+    "message": "Vous quittez l'application ?",
+    "oui": "Oui",
+    "non": "Non"
+  },
+  "sidebar": {
+    "titre": "🗂️ Texplorateur",
+    "sous_titre": "Recherche intelligente"
+  },
+  "accueil": {
+    "sous_titre": "Retrouvez une phrase dans vos fichiers, en un instant.",
+    "raccourci_relancer": "↻ Relancer : {libelle}",
+    "stats_recherches": "{n} recherche(s) dans l'historique",
+    "stats_vide": "Aucune recherche pour l'instant"
+  },
+  "formulaire": {
+    "titre": "Nouvelle recherche",
+    "label_phrase": "Phrase à rechercher :",
+    "placeholder_phrase": "Ex : rapport annuel 2025",
+    "label_dossier": "Dossier de recherche :",
+    "dossier_non_selectionne": "Aucun dossier sélectionné",
+    "label_extensions": "Types de fichiers :",
+    "erreur_champs_titre": "Champs requis",
+    "erreur_champs_message": "Veuillez saisir une phrase, sélectionner un dossier et au moins un type de fichier."
+  },
+  "recherche_en_cours": {
+    "messages": [
+      "Cherche dans les fichiers…",
+      "Parcourt les dossiers…",
+      "Analyse le contenu…",
+      "Presque fini…",
+      "Patiente un peu…"
+    ],
+    "parcours_dossiers": "Parcours des dossiers…",
+    "compteur": "{n} fichier(s) analysé(s) — {dossier}",
+    "annulation": "Annulation…"
+  },
+  "resultats": {
+    "titre": "Résultats de la recherche",
+    "aucun_resultat": "Aucun résultat : la phrase n'apparaît dans aucun des {total} fichier(s) analysé(s).",
+    "trouves": "{n} fichier(s) trouvé(s) sur {total} scanné(s)"
+  },
+  "historique": {
+    "titre": "Historique des recherches",
+    "vide": "Effectuez une recherche pour la voir s'afficher ici.",
+    "confirmer_suppression_titre": "Supprimer cette recherche",
+    "confirmer_suppression_message": "Supprimer définitivement \"{phrase}\" de l'historique ?"
+  },
+  "parametres": {
+    "titre": "Paramètres",
+    "sous_titre": "Paramètrez et gerez ici vos options par défaut",
+    "section_apparence": "Apparence",
+    "theme_label": "Thème de l'interface",
+    "section_recherche": "Recherche",
+    "extensions_label": "Types de fichiers pré-cochés à l'ouverture du formulaire",
+    "section_historique": "Historique",
+    "historique_compte": "{n} recherche(s) enregistrée(s)",
+    "historique_vide": "Aucune recherche enregistrée",
+    "effacer_historique": "Effacer l'historique",
+    "confirmer_titre": "Effacer l'historique",
+    "confirmer_message": "Supprimer définitivement tout l'historique des recherches ?",
+    "section_langue": "Langue",
+    "langue_label": "Langue de l'interface"
+  },
+  "a_propos": {
+    "version": "Version {version}",
+    "description": "Recherche intelligente de phrases dans vos fichiers\n.txt, .pdf, .docx et .xlsx.",
+    "auteur_prefixe": "Développé par",
+    "feedback_message": "Vous avez détecté un bug ou simplement un avis à partager en commentaire ?",
+    "feedback_lien": "C'est par ici"
+  }
+}

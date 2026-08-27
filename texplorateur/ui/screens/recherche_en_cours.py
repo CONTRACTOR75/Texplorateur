@@ -1,0 +1,67 @@
+import customtkinter as ctk
+
+from ...readers import tronquer_chemin
+from ..cute_animation import CuteAnimation
+from ..theme import ACCENT_GRIS, font_sous_titre
+from .base import Screen
+
+
+class RechercheEnCoursScreen(Screen):
+    """Écran plein cadre affiché pendant une recherche : rien d'autre à l'écran."""
+
+    def __init__(self, parent, app):
+        super().__init__(parent, app)
+        self._actif = False
+
+        centre = ctk.CTkFrame(self, fg_color="transparent")
+        centre.place(relx=0.5, rely=0.46, anchor="center")
+
+        self.cute_animation = CuteAnimation(centre, app)
+        self.cute_animation.pack()
+
+        self.barre = ctk.CTkProgressBar(centre, mode="indeterminate", width=280)
+        self.barre.pack(pady=(20, 8))
+
+        self.label_compteur = ctk.CTkLabel(centre, text="", font=font_sous_titre(11), text_color=ACCENT_GRIS)
+        self.label_compteur.pack()
+
+        self.bouton_annuler = ctk.CTkButton(
+            centre, text=self.t("commun.annuler"), fg_color="transparent", border_width=1,
+            text_color=("gray10", "gray90"), command=self._annuler,
+        )
+        self.bouton_annuler.pack(pady=(24, 0))
+
+    def retraduire(self):
+        # Écran non actif au moment d'un changement de langue (celui-ci se
+        # fait depuis Paramètres) : seul le libellé "Annuler" par défaut a
+        # besoin d'être resynchronisé, "Annulation…" ne peut pas être affiché
+        # ici puisqu'aucune recherche n'est en cours pendant ce changement.
+        self.bouton_annuler.configure(text=self.t("commun.annuler"))
+
+    def on_show(self, **kwargs):
+        self._actif = True
+        self.bouton_annuler.configure(state="normal", text=self.t("commun.annuler"))
+        self.label_compteur.configure(text=self.t("recherche_en_cours.parcours_dossiers"))
+        self.cute_animation.start()
+        self.barre.start()
+        self._rafraichir()
+
+    def on_hide(self):
+        self._actif = False
+        self.cute_animation.stop()
+        self.barre.stop()
+
+    def _annuler(self):
+        self.bouton_annuler.configure(state="disabled", text=self.t("recherche_en_cours.annulation"))
+        self.app.moteur_recherche.annuler()
+
+    def _rafraichir(self):
+        if not self._actif:
+            return
+        etat = self.app.etat_progres
+        traites = etat["traites"]
+        dossier = etat["dossier_courant"]
+        if traites > 0:
+            self.label_compteur.configure(
+                text=self.t("recherche_en_cours.compteur", n=traites, dossier=tronquer_chemin(dossier)))
+        self.after(150, self._rafraichir)
