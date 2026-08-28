@@ -51,6 +51,7 @@
     ],
     "parcours_dossiers": "Scanning folders…",
     "compteur": "{n} file(s) analyzed — {dossier}",
+    "compteur_parcours": "{n} file(s) found… — {dossier}",
     "annulation": "Cancelling…"
   },
   "resultats": {

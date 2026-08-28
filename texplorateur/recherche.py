@@ -1,22 +1,9 @@
-import concurrent.futures
 import os
 import threading
 
 from .readers import LECTEURS_PAR_EXTENSION, extraire_contexte
 
-# Un pool de threads a un coût fixe (ordonnancement, verrou de progression)
-# qui dépasse le gain tant que la lecture de chaque fichier est quasi
-# instantanée : mesuré ~20% plus LENT que le séquentiel sur 400 .txt en
-# cache disque chaud. Le nombre ou la taille totale des fichiers ne prédit
-# pas ce coût — un .txt reste quasi instantané même volumineux, alors que
-# .pdf/.docx/.xlsx impliquent un vrai travail de décompression/parsing par
-# fichier (mesuré x15 plus rapide en parallèle dès que ce travail domine).
-# La décision se base donc sur le TYPE de fichier recherché, pas sur le
-# volume.
 EXTENSIONS_LOURDES = {".pdf", ".docx", ".xlsx"}
-SEUIL_FICHIERS_LOURDS = 6
-SEUIL_FICHIERS_LEGERS = 600
-NB_THREADS_MAX = 16
 
 # Certains PDF malformés déclenchent des boucles de parsing pathologiques
 # dans PyPDF2 (bug connu de la bibliothèque, pas de notre code) — sans
@@ -27,24 +14,35 @@ NB_THREADS_MAX = 16
 # des autres erreurs de lecture dans readers.py).
 TIMEOUT_LECTURE_LOURDE = 30  # secondes
 
+# os.path.isjunction n'existe qu'à partir de Python 3.12 : repli silencieux
+# (aucun élagage) sur un interpréteur plus ancien plutôt qu'un crash.
+_est_jonction = getattr(os.path, "isjunction", lambda chemin: False)
+
 
 class MoteurRecherche:
-    """Recherche une phrase dans les fichiers d'un dossier, en arrière-plan.
+    """Recherche une phrase dans les fichiers d'un dossier, en arrière-plan
+    (un seul thread dédié, séquentiel).
 
-    Le parcours des dossiers reste séquentiel (rapide, ce n'est que de la
-    métadonnée). La lecture/analyse du contenu est répartie sur un pool de
-    threads uniquement quand le type de fichier recherché le justifie (voir
-    EXTENSIONS_LOURDES et les seuils associés) ; sinon elle reste
-    séquentielle, plus rapide dans ce cas précis.
+    Le traitement multithread a été essayé puis retiré : mesuré avec du
+    vrai parsing PyPDF2 (pas un `time.sleep()` en guise de simulation, qui
+    libère le GIL et ne représente pas un travail CPU réel), paralléliser
+    n'apporte aucun gain net (x0.96 à x0.98, parfois plus lent que
+    séquentiel) car PyPDF2/python-docx/openpyxl sont du pur Python qui
+    retient le GIL — et ça a un coût bien réel : jusqu'à x2 de
+    ralentissement du thread principal Tk avec 16 threads simultanés sur du
+    PDF normal, et une contention bien plus sévère sur des fichiers
+    pathologiques (mesuré jusqu'à x66 dans un scénario extrême), ce qui
+    explique les gels d'interface observés. Avec le seul thread de
+    recherche déjà nécessaire (aucune parallélisation), la contention
+    mesurée tombe à x1.13 — négligeable.
 
-    Les callbacks `on_progress` et `on_termine` sont appelés depuis un thread
-    de travail (jamais le thread principal, potentiellement plusieurs en
-    parallèle pour `on_progress` en mode threads) : à l'appelant de les faire
-    retomber sur le thread Tk (typiquement via `root.after(0, ...)`).
+    Les callbacks `on_progress` et `on_termine` sont appelés depuis le
+    thread de recherche (jamais le thread principal) : à l'appelant de les
+    faire retomber sur le thread Tk (typiquement via `root.after(0, ...)`).
     """
 
     def __init__(self, on_progress, on_termine):
-        self.on_progress = on_progress  # (fichiers_traites, dossier_courant) -> None
+        self.on_progress = on_progress  # (fichiers_traites, dossier_courant, phase) -> None
         self.on_termine = on_termine  # (resultats, total_fichiers, annulee) -> None
         self._annuler_event = threading.Event()
 
@@ -57,19 +55,33 @@ class MoteurRecherche:
 
     def _lister_fichiers(self, dossier, extensions_tuple):
         fichiers = []
-        for dossier_courant, _, noms in os.walk(dossier):
+        for dossier_courant, sous_dossiers, noms in os.walk(dossier):
             if self._annuler_event.is_set():
                 return fichiers, True
+
+            # Une jonction NTFS (ex: AppData\Local\Application Data, souvent
+            # auto-référentielle) n'est pas détectée par os.path.islink() et
+            # serait donc parcourue comme un dossier normal par os.walk, avec
+            # un vrai risque de boucle ou de profondeur démesurée sur un
+            # dossier de départ large (C:\, profil utilisateur...). On
+            # l'exclut de la descente en modifiant `sous_dossiers` en place
+            # (mécanisme standard d'élagage d'os.walk).
+            sous_dossiers[:] = [
+                d for d in sous_dossiers
+                if not _est_jonction(os.path.join(dossier_courant, d))
+            ]
+
             for nom in noms:
                 if nom.lower().endswith(extensions_tuple):
                     fichiers.append(os.path.join(dossier_courant, nom))
-        return fichiers, False
 
-    @staticmethod
-    def _doit_paralleliser(fichiers, extensions):
-        a_extension_lourde = any(ext in EXTENSIONS_LOURDES for ext in extensions)
-        seuil = SEUIL_FICHIERS_LOURDS if a_extension_lourde else SEUIL_FICHIERS_LEGERS
-        return len(fichiers) >= seuil
+            # Sur un dossier de départ large, le seul parcours (avant même
+            # de lire un fichier) peut prendre longtemps : sans ce signal,
+            # l'écran "Recherche en cours" resterait figé sur "Parcours des
+            # dossiers…" sans aucune preuve que l'app travaille toujours.
+            self.on_progress(len(fichiers), dossier_courant, "parcours")
+
+        return fichiers, False
 
     @staticmethod
     def _lire_avec_delai_limite(lecteur, chemin, timeout_s):
@@ -77,8 +89,7 @@ class MoteurRecherche:
         temps. Si la lecture n'a pas fini avant `timeout_s`, le fichier est
         abandonné (retourne "") sans attendre la fin réelle du parsing —
         le thread démon continue en arrière-plan mais, étant démon, ne
-        bloquera jamais la fermeture de l'application, contrairement à un
-        `ThreadPoolExecutor` classique dont les threads ne le sont pas."""
+        bloquera jamais la fermeture de l'application."""
         resultat = {}
 
         def cible():
@@ -112,61 +123,15 @@ class MoteurRecherche:
         extensions_tuple = tuple(extensions)
         fichiers, annulee = self._lister_fichiers(dossier, extensions_tuple)
 
+        resultats = []
         if fichiers and not annulee:
-            if self._doit_paralleliser(fichiers, extensions_tuple):
-                resultats, annulee = self._analyser_en_parallele(fichiers, phrase)
-            else:
-                resultats, annulee = self._analyser_sequentiel(fichiers, phrase)
-        else:
-            resultats = []
-
-        self.on_termine(resultats, len(fichiers), annulee)
-
-    def _analyser_sequentiel(self, fichiers, phrase):
-        resultats = []
-        for i, chemin in enumerate(fichiers, start=1):
-            if self._annuler_event.is_set():
-                return resultats, True
-            resultat = self._analyser_fichier(chemin, phrase)
-            if resultat:
-                resultats.append(resultat)
-            self.on_progress(i, os.path.dirname(chemin))
-        return resultats, False
-
-    def _analyser_en_parallele(self, fichiers, phrase):
-        resultats = []
-        annulee = False
-        verrou = threading.Lock()
-        traites = 0
-
-        def travail(chemin):
-            nonlocal traites
-            resultat = None
-            if not self._annuler_event.is_set():
-                resultat = self._analyser_fichier(chemin, phrase)
-            with verrou:
-                traites += 1
-                n = traites
-            self.on_progress(n, os.path.dirname(chemin))
-            return resultat
-
-        nb_threads = min(NB_THREADS_MAX, max(1, len(fichiers)))
-        executor = concurrent.futures.ThreadPoolExecutor(max_workers=nb_threads)
-        try:
-            futures = [executor.submit(travail, chemin) for chemin in fichiers]
-            for future in concurrent.futures.as_completed(futures):
+            for i, chemin in enumerate(fichiers, start=1):
                 if self._annuler_event.is_set():
                     annulee = True
                     break
-                resultat = future.result()
+                resultat = self._analyser_fichier(chemin, phrase)
                 if resultat:
                     resultats.append(resultat)
-        finally:
-            # cancel_futures=True : les tâches pas encore démarrées sont
-            # abandonnées immédiatement sur annulation, au lieu de toutes
-            # s'exécuter avant la fermeture du pool (un shutdown() sans cet
-            # argument attend la fin de TOUT le travail déjà soumis, pas
-            # seulement des tâches en cours).
-            executor.shutdown(wait=True, cancel_futures=True)
+                self.on_progress(i, os.path.dirname(chemin), "analyse")
 
-        return resultats, annulee
+        self.on_termine(resultats, len(fichiers), annulee)

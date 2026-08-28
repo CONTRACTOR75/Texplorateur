@@ -51,6 +51,7 @@
     ],
     "parcours_dossiers": "Parcours des dossiers…",
     "compteur": "{n} fichier(s) analysé(s) — {dossier}",
+    "compteur_parcours": "{n} fichier(s) trouvé(s)… — {dossier}",
     "annulation": "Annulation…"
   },
   "resultats": {

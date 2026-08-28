@@ -1,10 +1,24 @@
+import logging
 import os
+import warnings
 
 import docx
 import PyPDF2
 import openpyxl
+from PyPDF2.errors import PdfReadWarning
 
 CONTEXTE_TAILLE = 60
+
+# PyPDF2 émet des avertissements bruyants (logging + warnings.warn) pour des
+# PDF malformés qu'il parvient quand même à lire (mode non strict) — ce ne
+# sont pas des erreurs actionnables pour l'utilisateur d'une app GUI. Les
+# émettre en masse depuis plusieurs threads en parallèle (recherche
+# multithread sur des PDF) crée une forte contention — verrou interne du
+# module logging, écritures stdout/stderr potentiellement bloquantes si le
+# terminal ne suit pas — qui peut affamer le thread principal Tk au point
+# de figer l'interface. On les désactive entièrement.
+logging.getLogger("PyPDF2").setLevel(logging.ERROR)
+warnings.filterwarnings("ignore", category=PdfReadWarning)
 
 
 def lire_txt(chemin):

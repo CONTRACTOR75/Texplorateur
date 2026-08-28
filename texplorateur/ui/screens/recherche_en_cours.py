@@ -13,8 +13,15 @@ class RechercheEnCoursScreen(Screen):
         super().__init__(parent, app)
         self._actif = False
 
-        centre = ctk.CTkFrame(self, fg_color="transparent")
-        centre.place(relx=0.5, rely=0.46, anchor="center")
+        # Carte bordée (même traitement que l'écran Formulaire) plutôt que du
+        # contenu flottant directement sur le fond : sur une fenêtre large
+        # ou maximisée, un petit bloc de texte centré sans ancrage visuel
+        # se perd dans le vide et donne une impression de mise en page
+        # déséquilibrée.
+        carte = ctk.CTkFrame(self, corner_radius=14)
+        carte.place(relx=0.5, rely=0.46, anchor="center")
+        centre = ctk.CTkFrame(carte, fg_color="transparent")
+        centre.pack(padx=56, pady=48)
 
         self.cute_animation = CuteAnimation(centre, app)
         self.cute_animation.pack()
@@ -61,7 +68,14 @@ class RechercheEnCoursScreen(Screen):
         etat = self.app.etat_progres
         traites = etat["traites"]
         dossier = etat["dossier_courant"]
-        if traites > 0:
-            self.label_compteur.configure(
-                text=self.t("recherche_en_cours.compteur", n=traites, dossier=tronquer_chemin(dossier)))
+        phase = etat.get("phase", "analyse")
+
+        if traites > 0 or (phase == "parcours" and dossier):
+            # Sur un dossier de départ large (C:\, profil utilisateur...),
+            # le seul parcours des dossiers (avant même de lire un fichier)
+            # peut prendre du temps : sans ce libellé distinct, l'écran
+            # resterait figé sur "Parcours des dossiers…" sans aucun signe
+            # de vie, alors même que l'app travaille toujours.
+            cle = "recherche_en_cours.compteur_parcours" if phase == "parcours" else "recherche_en_cours.compteur"
+            self.label_compteur.configure(text=self.t(cle, n=traites, dossier=tronquer_chemin(dossier)))
         self.after(150, self._rafraichir)

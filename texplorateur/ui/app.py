@@ -36,16 +36,27 @@ class TexplorateurApp:
         # Le "X" de la fenêtre passe aussi par la confirmation, plutôt que
         # de fermer sans demander alors que le bouton "Quitter" le fait.
         self.root.protocol("WM_DELETE_WINDOW", self.demander_quitter)
+        # Windows ne force pas toujours un repaint complet d'une fenêtre Tk
+        # qui reprend le focus après avoir été couverte par une autre
+        # fenêtre : ça peut laisser des zones à moitié redessinées le temps
+        # d'une interaction. On force un passage de mise à jour à chaque
+        # retour de focus sur la fenêtre elle-même (pas sur un widget interne
+        # qui reçoit le focus, d'où le filtre sur `event.widget`).
+        self.root.bind("<FocusIn>", self._forcer_redessin)
 
         # État de la recherche en cours, mis à jour depuis le thread de
         # recherche : simple mutation de dict, aucun accès Tk depuis ce thread.
-        self.etat_progres = {"traites": 0, "dossier_courant": ""}
+        self.etat_progres = {"traites": 0, "dossier_courant": "", "phase": "parcours"}
         self._recherche_courante = None
         self.moteur_recherche = MoteurRecherche(on_progress=self._on_progress, on_termine=self._on_termine)
 
         self._ecran_actuel = None
         self._construire_layout()
         self.navigate("accueil")
+
+    def _forcer_redessin(self, event):
+        if event.widget is self.root:
+            self.root.update_idletasks()
 
     def _appliquer_icone(self):
         # `.ico` requis par iconbitmap() sous Windows : c'est bien le format
@@ -113,13 +124,14 @@ class TexplorateurApp:
 
     def lancer_recherche(self, phrase, extensions, dossier):
         self._recherche_courante = {"phrase": phrase, "extensions": extensions, "dossier": dossier}
-        self.etat_progres = {"traites": 0, "dossier_courant": ""}
+        self.etat_progres = {"traites": 0, "dossier_courant": "", "phase": "parcours"}
         self.navigate("recherche_en_cours")
         self.moteur_recherche.lancer(phrase, extensions, dossier)
 
-    def _on_progress(self, traites, dossier_courant):
+    def _on_progress(self, traites, dossier_courant, phase):
         self.etat_progres["traites"] = traites
         self.etat_progres["dossier_courant"] = dossier_courant
+        self.etat_progres["phase"] = phase
 
     def _on_termine(self, resultats, total, annulee):
         self.root.after(0, lambda: self._recherche_terminee(resultats, total, annulee))
