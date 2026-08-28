@@ -18,6 +18,15 @@ SEUIL_FICHIERS_LOURDS = 6
 SEUIL_FICHIERS_LEGERS = 600
 NB_THREADS_MAX = 16
 
+# Certains PDF malformés déclenchent des boucles de parsing pathologiques
+# dans PyPDF2 (bug connu de la bibliothèque, pas de notre code) — sans
+# limite, un seul fichier de ce type peut bloquer toute une recherche
+# indéfiniment, sans erreur ni message pour l'utilisateur. On borne donc
+# la lecture des formats lourds à ce délai ; au-delà, le fichier est
+# ignoré comme s'il n'avait pas pu être lu (cohérent avec le traitement
+# des autres erreurs de lecture dans readers.py).
+TIMEOUT_LECTURE_LOURDE = 30  # secondes
+
 
 class MoteurRecherche:
     """Recherche une phrase dans les fichiers d'un dossier, en arrière-plan.
@@ -63,11 +72,39 @@ class MoteurRecherche:
         return len(fichiers) >= seuil
 
     @staticmethod
-    def _analyser_fichier(chemin, phrase):
+    def _lire_avec_delai_limite(lecteur, chemin, timeout_s):
+        """Exécute `lecteur(chemin)` dans un thread démon borné dans le
+        temps. Si la lecture n'a pas fini avant `timeout_s`, le fichier est
+        abandonné (retourne "") sans attendre la fin réelle du parsing —
+        le thread démon continue en arrière-plan mais, étant démon, ne
+        bloquera jamais la fermeture de l'application, contrairement à un
+        `ThreadPoolExecutor` classique dont les threads ne le sont pas."""
+        resultat = {}
+
+        def cible():
+            try:
+                resultat["valeur"] = lecteur(chemin)
+            except Exception:
+                resultat["valeur"] = ""
+
+        thread = threading.Thread(target=cible, daemon=True)
+        thread.start()
+        thread.join(timeout_s)
+        return resultat.get("valeur", "")
+
+    @classmethod
+    def _analyser_fichier(cls, chemin, phrase):
         ext = os.path.splitext(chemin)[1].lower()
         lecteur = LECTEURS_PAR_EXTENSION.get(ext)
-        contenu = lecteur(chemin) if lecteur else ""
-        if phrase.lower() in contenu.lower():
+        if lecteur is None:
+            return None
+
+        if ext in EXTENSIONS_LOURDES:
+            contenu = cls._lire_avec_delai_limite(lecteur, chemin, TIMEOUT_LECTURE_LOURDE)
+        else:
+            contenu = lecteur(chemin)
+
+        if contenu and phrase.lower() in contenu.lower():
             return (os.path.basename(chemin), chemin, extraire_contexte(contenu, phrase))
         return None
 
